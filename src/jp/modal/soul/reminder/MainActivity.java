@@ -15,7 +15,7 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-		setContentView(R.layout.dashboard);
+		setContentView(R.layout.activity_main);
 
 		setTitle();
 	}
