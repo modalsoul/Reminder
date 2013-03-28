@@ -4,9 +4,10 @@
     android:gravity="center"
     android:background="@drawable/button_state"
     android:focusable="true"
-    android:padding="10dp" >
+    android:padding="10dp"
+    android:id="@+id/item1" >
     <ImageView 
-        android:src="@drawable/bus_icon"
+        android:src="@drawable/tasks"
         android:layout_width="wrap_content"
         android:layout_height="80dp"
         android:adjustViewBounds="true"/>

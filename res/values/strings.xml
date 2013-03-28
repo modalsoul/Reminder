@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="about">AndroidApplicationTemplate - This is a project template of eclipse for android application development.</string>
-  <string name="app_name">AndroidApplication</string>
+  <string name="about">This application is Reminder application.</string>
+  <string name="app_name">Remind me later.</string>
 </resources>
