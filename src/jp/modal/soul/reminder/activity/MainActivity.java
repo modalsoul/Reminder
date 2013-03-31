@@ -1,23 +1,23 @@
 package jp.modal.soul.reminder.activity;
 
-import java.util.Calendar;
+import java.io.IOException;
 
 import jp.modal.soul.reminder.R;
-import jp.modal.soul.reminder.receiver.AlarmReceiver;
+import jp.modal.soul.reminder.model.DatabaseHelper;
+import jp.modal.soul.reminder.util.InitState;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
-
+	/** ログ出力用 タグ */
+    public final String TAG = this.getClass().getSimpleName();
+    
 	View task;
 	View list;
 
@@ -27,6 +27,8 @@ public class MainActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.activity_main);
 
+		setupInit();
+		
 		setupView();
 
 	}
@@ -46,4 +48,25 @@ public class MainActivity extends Activity {
 		});
 	}
 	
+	/**
+	 * アプリ初回起動時の初期化処理
+	 */
+	public void setupInit() {
+		InitState initState = new InitState(this);
+		// 初回起動の判定
+		if(initState.getStatus() == InitState.PREFERENCE_INIT) {
+			// 初回起動の場合、初期データをセット
+			DatabaseHelper dbHelper = new DatabaseHelper(this);
+			try {
+				Log.e(TAG, "DO INIT");
+				dbHelper.createEmptyDataBase();
+			} catch (IOException e) {
+				Log.e(TAG, e.getMessage());
+			}
+			dbHelper.close();
+			// 起動状態を変更
+			initState.setStatus(InitState.PREFERENCE_BOOTED);
+		}
+	}
+
 }

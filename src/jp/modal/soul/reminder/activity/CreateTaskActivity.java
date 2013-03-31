@@ -3,6 +3,8 @@ package jp.modal.soul.reminder.activity;
 import java.util.Calendar;
 
 import jp.modal.soul.reminder.R;
+import jp.modal.soul.reminder.model.TaskDao;
+import jp.modal.soul.reminder.model.TaskItem;
 import jp.modal.soul.reminder.receiver.AlarmReceiver;
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -11,21 +13,31 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class CreateTaskActivity extends Activity {
-	
+	/** ログ出力用 タグ */
+    public final String TAG = this.getClass().getSimpleName();
+    
+    public static final int ONE_MINUTE_SECONDS = 60;
+    public static final int ONE_HOUR_MINUTES = 60;
+    
 	EditText messageView;
-	Button setTimeButton;
+	View setTimeButton;
 	Button createTaskButton;
 	TimePickerDialog dialog;
+	TextView displayTime;
 	
+	TaskDao taskDao;
 	
 	int hour = 0;
 	int minutes = 0;
@@ -37,12 +49,20 @@ public class CreateTaskActivity extends Activity {
 		
 		setupView();
 		
+		setupDao();
+		
+	}
+	
+	void setupDao() {
+		taskDao = new TaskDao(this);
 	}
 	
 	private void setupView() {
+		displayTime = (TextView)findViewById(R.id.display_time);
+		
 		messageView = (EditText)findViewById(R.id.message);
 		
-		setTimeButton = (Button)findViewById(R.id.set_time);
+		setTimeButton = findViewById(R.id.select_time);
 		
 		setTimeButton.setOnClickListener(onSetTimeButtonClickListener);
 		
@@ -65,6 +85,20 @@ public class CreateTaskActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			setupAlarm();
+			TaskItem item = new TaskItem();
+			item.message = messageView.getText().toString();
+			item.delay = (hour * ONE_HOUR_MINUTES + minutes) * ONE_MINUTE_SECONDS;
+			item.status = TaskItem.STATUS_TODO;
+			
+			SQLiteDatabase db = taskDao.getWritableDatabase();
+			try {
+				taskDao.insertWithoutOpenDb(db, item);
+			} catch (Exception e) {
+				Log.e(TAG, "INSERT FAILED:" + e.getMessage());
+			} finally {
+				db.close();
+			}
+			finish();
 		}
 	};
 	
@@ -74,6 +108,8 @@ public class CreateTaskActivity extends Activity {
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 			hour = hourOfDay;
 			minutes = minute;
+			displayTime.setText(hourOfDay + ":" + minute);
+			displayTime.setTextSize(20);
 		}
 		
 	};

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:gravity="center_horizontal"
+    android:background="@drawable/time_state"
+    android:focusable="true"
+    android:padding="15dp"
+    android:id="@+id/select_time">
+    <ImageView 
+        android:src="@drawable/clock"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:adjustViewBounds="true"
+        />
+    <TextView 
+        android:id="@+id/display_time"
+        android:background="@color/feature_text_bg"
+        android:text="時間を設定してください"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="10dp"
+        android:textSize="14sp"/>
+</LinearLayout>
