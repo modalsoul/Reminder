@@ -58,7 +58,6 @@ public class MainActivity extends Activity {
 			// 初回起動の場合、初期データをセット
 			DatabaseHelper dbHelper = new DatabaseHelper(this);
 			try {
-				Log.e(TAG, "DO INIT");
 				dbHelper.createEmptyDataBase();
 			} catch (IOException e) {
 				Log.e(TAG, e.getMessage());

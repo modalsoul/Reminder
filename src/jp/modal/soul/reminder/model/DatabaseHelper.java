@@ -55,7 +55,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             try {  
                 // asset に格納したデータベースをコピーする  
                 copyDataBaseFromAsset();   
-                Log.e(TAG, "COPY_SUCCESS");
             } catch (IOException e) {  
             	Log.e(TAG, "COPY ERROR");
                 throw new Error("Error copying database");  

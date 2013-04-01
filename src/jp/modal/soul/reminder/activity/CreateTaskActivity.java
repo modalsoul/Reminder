@@ -6,6 +6,7 @@ import jp.modal.soul.reminder.R;
 import jp.modal.soul.reminder.model.TaskDao;
 import jp.modal.soul.reminder.model.TaskItem;
 import jp.modal.soul.reminder.receiver.AlarmReceiver;
+import jp.modal.soul.reminder.util.Const;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -38,9 +39,11 @@ public class CreateTaskActivity extends Activity {
 	TextView displayTime;
 	
 	TaskDao taskDao;
+	TaskItem item;
 	
 	int hour = 0;
 	int minutes = 0;
+	int taskId;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,19 +83,24 @@ public class CreateTaskActivity extends Activity {
 			dialog.show();
 		}
 	};
+	
 	OnClickListener onCreateTaskButtonClickListener = new OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
-			setupAlarm();
-			TaskItem item = new TaskItem();
+			item = new TaskItem();
 			item.message = messageView.getText().toString();
 			item.delay = (hour * ONE_HOUR_MINUTES + minutes) * ONE_MINUTE_SECONDS;
 			item.status = TaskItem.STATUS_TODO;
 			
 			SQLiteDatabase db = taskDao.getWritableDatabase();
 			try {
-				taskDao.insertWithoutOpenDb(db, item);
+				taskId = (int)taskDao.insertWithoutOpenDb(db, item);
+				if(taskId != -1) {
+					setupAlarm();
+				} else {
+					throw(new Exception());
+				}
 			} catch (Exception e) {
 				Log.e(TAG, "INSERT FAILED:" + e.getMessage());
 			} finally {
@@ -117,18 +125,18 @@ public class CreateTaskActivity extends Activity {
 
 	void setupAlarm() {
 		Intent intent = new Intent(CreateTaskActivity.this, AlarmReceiver.class);  
-		intent.putExtra("hoge", hour + ":" + minutes);
+		intent.putExtra(TaskItem.TASK_ID, taskId);
         PendingIntent sender = PendingIntent.getBroadcast(CreateTaskActivity.this, 0, intent, 0);  
   
         Calendar calendar = Calendar.getInstance();  
         calendar.setTimeInMillis(System.currentTimeMillis());  
-        calendar.add(Calendar.SECOND, 3);  
+        calendar.add(Calendar.SECOND, item.delay);  
           
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);  
         // one shot  
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);  
                   
-        Toast.makeText(CreateTaskActivity.this, "Start Alarm!", Toast.LENGTH_SHORT).show();  
+        Toast.makeText(CreateTaskActivity.this, Const.CREATE_TASK_SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();  
     
 	}
 

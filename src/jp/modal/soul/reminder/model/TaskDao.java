@@ -73,6 +73,18 @@ public class TaskDao extends Dao{
 		return itemList;
 	}
 	
+	public TaskItem queryTaskByTaskId(int id) {
+		String selection = COLUMN_ID + " = ?";
+		String[] selectionArgs = new String[1];
+		selectionArgs[0] = String.valueOf(id);
+		ArrayList<TaskItem> taskItems = queryList(COLUMNS, selection, selectionArgs, null, null, null, null);
+		
+		if(taskItems.size() != 1) {
+			return null;
+		}
+		return taskItems.get(0);
+	}
+	
 	public ArrayList<TaskItem> queryAllTask() {
 		String orderBy = COLUMN_TARGET_DATE + " desc ";
 		return queryList(COLUMNS, null, null, null, null, orderBy, null);
