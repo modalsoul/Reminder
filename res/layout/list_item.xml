@@ -9,28 +9,28 @@
   android:paddingBottom="20dip"
   >
   <ImageView
-    android:id="@+id/imageview"
+    android:id="@+id/status_icon"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentLeft="true"
     android:layout_centerInParent="true"
     />
   <TextView
-    android:id="@+id/textview1"
+    android:id="@+id/message"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_toRightOf="@id/imageview"
+    android:layout_toRightOf="@id/status_icon"
     android:layout_alignParentTop="true"
     android:textSize="20sp"
     android:textStyle="bold"
     android:layout_marginLeft="20dip"
     />
   <TextView
-    android:id="@+id/textview2"
+    android:id="@+id/timestamp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_toRightOf="@id/imageview"
-    android:layout_below="@id/textview1"
+    android:layout_toRightOf="@id/status_icon"
+    android:layout_below="@id/message"
     android:textSize="16sp"
     android:layout_marginLeft="20dip"
     />
