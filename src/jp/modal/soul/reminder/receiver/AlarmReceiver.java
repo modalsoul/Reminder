@@ -1,7 +1,7 @@
 package jp.modal.soul.reminder.receiver;
 
 import jp.modal.soul.reminder.R;
-import jp.modal.soul.reminder.activity.MainActivity;
+import jp.modal.soul.reminder.activity.TaskListActivity;
 import jp.modal.soul.reminder.model.TaskDao;
 import jp.modal.soul.reminder.model.TaskItem;
 import android.app.Notification;
@@ -10,7 +10,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 public class AlarmReceiver extends BroadcastReceiver {  
 	  
@@ -33,7 +32,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }  
     
     void setupNotification() {
-    	Intent intent = new Intent(context, MainActivity.class);
+    	Intent intent = new Intent(context, TaskListActivity.class);
     	intent.putExtra(TaskItem.TASK_ID, taskId);
     	PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
     	
@@ -44,6 +43,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 //    	} catch (ClassNotFoundException e) {
     		notification = new Notification(R.drawable.tasks, "Hoge", System.currentTimeMillis());
     		notification.setLatestEventInfo(context, "Title", item.message, contentIntent);
+    		notification.flags = Notification.FLAG_AUTO_CANCEL;
 //    	}
     	
     	NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);

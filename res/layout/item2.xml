@@ -4,7 +4,8 @@
     android:gravity="center"
     android:background="@drawable/button_state"
     android:focusable="true"
-    android:padding="10dp" >
+    android:padding="10dp"
+    android:id="@+id/list_item" >
     <ImageView 
         android:src="@drawable/list"
         android:layout_width="wrap_content"

@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 
 
 	void setupView() {
-		task = findViewById(R.id.item1);
+		task = findViewById(R.id.task_item);
 		task.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -46,6 +46,17 @@ public class MainActivity extends Activity {
 
 			}
 		});
+		
+		list = findViewById(R.id.list_item);
+		list.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), TaskListActivity.class);
+				startActivity(intent);
+			}
+		});
+		
 	}
 	
 	/**
