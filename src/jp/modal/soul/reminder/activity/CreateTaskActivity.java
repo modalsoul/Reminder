@@ -116,7 +116,11 @@ public class CreateTaskActivity extends Activity {
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 			hour = hourOfDay;
 			minutes = minute;
-			displayTime.setText(hourOfDay + ":" + minute);
+			if(minute < 10) {
+				displayTime.setText(hourOfDay + ":0" + minute);
+			} else {
+				displayTime.setText(hourOfDay + ":" + minute);
+			}
 			displayTime.setTextSize(20);
 		}
 		

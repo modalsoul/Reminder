@@ -1,9 +1,12 @@
 package jp.modal.soul.reminder.activity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import jp.modal.soul.reminder.R;
 import jp.modal.soul.reminder.model.TaskItem;
+import jp.modal.soul.reminder.util.Const;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 public class TaskListAdapter extends ArrayAdapter<TaskItem>  {
 
 	static class ViewHolder {
+		TextView hiddenId;
 		TextView messageView;
 	    TextView timestampView;
 	    ImageView statusView;
@@ -35,6 +39,7 @@ public class TaskListAdapter extends ArrayAdapter<TaskItem>  {
     	if (convertView == null) {
     		convertView = inflater.inflate(layoutId, parent, false);
     		holder = new ViewHolder();
+//    		holder.hiddenId = (TextView) convertView.findViewById(R.id.hidden_id);
     		holder.messageView = (TextView) convertView.findViewById(R.id.message);
     		holder.timestampView = (TextView) convertView.findViewById(R.id.timestamp);
     		holder.statusView = (ImageView) convertView.findViewById(R.id.status_icon);
@@ -43,14 +48,23 @@ public class TaskListAdapter extends ArrayAdapter<TaskItem>  {
     		holder = (ViewHolder) convertView.getTag();
     	}
     	TaskItem data = getItem(position);
+//    	holder.hiddenId.setText(data.id);
     	holder.messageView.setText(data.message);
-    	holder.timestampView.setText(data.target_date);
+    	holder.timestampView.setText(getDateString(data.target_date) + Const.TASK_ALART_TIME_STRING);
     	if(data.status == TaskItem.STATUS_DONE) {
     		holder.statusView.setImageResource(R.drawable.tasks);
     	} else if(data.status == TaskItem.STATUS_TODO) {
     		holder.statusView.setImageResource(R.drawable.clock);
     	}
     	return convertView;
+    }
+    
+    String getDateString(String targetDateMillis) {
+
+    	Date target = new Date(Long.valueOf(targetDateMillis));
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("M/d hh:mm");
+    	
+    	return dateFormat.format(target);
     }
 }
 
