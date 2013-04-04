@@ -7,10 +7,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class TaskDao extends Dao{
 	/** ログ出力用 タグ */
     public final String TAG = this.getClass().getSimpleName();
+    
+    public static final int MILLI = 1000;
 	
 	public static final String TABLE_NAME = "task";
 	
@@ -53,7 +56,6 @@ public class TaskDao extends Dao{
 		taskItem.start_date = cursor.getString(3);
 		taskItem.target_date = cursor.getString(4);
 		taskItem.status = cursor.getInt(5);
-		
 		return taskItem;
 	}
 	
@@ -107,9 +109,9 @@ public class TaskDao extends Dao{
 		
 		long startDate = new Date().getTime();
 		values.put(COLUMN_START_DATE, startDate);
-		long targetDate = startDate + item.delay;
+		long targetDate = startDate + item.delay*MILLI;
 		values.put(COLUMN_TARGET_DATE, targetDate);
-		
+		Log.e(TAG, "start is:" + startDate +", target is:" + targetDate);
 		values.put(COLUMN_STATUS, item.status);
 		
 		return values;

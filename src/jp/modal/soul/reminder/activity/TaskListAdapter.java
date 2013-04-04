@@ -8,6 +8,7 @@ import jp.modal.soul.reminder.R;
 import jp.modal.soul.reminder.model.TaskItem;
 import jp.modal.soul.reminder.util.Const;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class TaskListAdapter extends ArrayAdapter<TaskItem>  {
+	/** ログ出力用 タグ */
+    public final String TAG = this.getClass().getSimpleName();
 
 	static class ViewHolder {
 		TextView hiddenId;
@@ -39,7 +42,7 @@ public class TaskListAdapter extends ArrayAdapter<TaskItem>  {
     	if (convertView == null) {
     		convertView = inflater.inflate(layoutId, parent, false);
     		holder = new ViewHolder();
-//    		holder.hiddenId = (TextView) convertView.findViewById(R.id.hidden_id);
+    		holder.hiddenId = (TextView) convertView.findViewById(R.id.hidden_id);
     		holder.messageView = (TextView) convertView.findViewById(R.id.message);
     		holder.timestampView = (TextView) convertView.findViewById(R.id.timestamp);
     		holder.statusView = (ImageView) convertView.findViewById(R.id.status_icon);
@@ -48,9 +51,12 @@ public class TaskListAdapter extends ArrayAdapter<TaskItem>  {
     		holder = (ViewHolder) convertView.getTag();
     	}
     	TaskItem data = getItem(position);
-//    	holder.hiddenId.setText(data.id);
+    	holder.hiddenId.setText(Integer.toString(data.id));
     	holder.messageView.setText(data.message);
     	holder.timestampView.setText(getDateString(data.target_date) + Const.TASK_ALART_TIME_STRING);
+    	Date s = new Date(Long.valueOf(data.start_date));
+    	Date t = new Date(Long.valueOf(data.target_date));
+
     	if(data.status == TaskItem.STATUS_DONE) {
     		holder.statusView.setImageResource(R.drawable.tasks);
     	} else if(data.status == TaskItem.STATUS_TODO) {
@@ -62,7 +68,7 @@ public class TaskListAdapter extends ArrayAdapter<TaskItem>  {
     String getDateString(String targetDateMillis) {
 
     	Date target = new Date(Long.valueOf(targetDateMillis));
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("M/d hh:mm");
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("M/d HH:mm");
     	
     	return dateFormat.format(target);
     }

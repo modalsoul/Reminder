@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class TaskListActivity extends Activity {
 	/** ログ出力用 タグ */
@@ -55,7 +57,7 @@ public class TaskListActivity extends Activity {
 
 		listView.setAdapter(adapter);
 		
-//		listView.setOnItemClickListener(listItemOnClickListener);
+		listView.setOnItemClickListener(listItemOnClickListener);
 		
 	}
 	
@@ -64,7 +66,11 @@ public class TaskListActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-//			Log.e(TAG, parent.getChildAt(position));
+			TextView hiddenId = (TextView)parent.getChildAt(position).findViewById(R.id.hidden_id);
+			
+			Intent intent = new Intent(getApplicationContext(), TaskDetailActivity.class);
+			intent.putExtra(TaskItem.TASK_ID, hiddenId.getText().toString());
+			startActivity(intent);
 			
 		}
 		

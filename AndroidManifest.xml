@@ -21,11 +21,12 @@
         </activity>
         <activity 
             android:name="jp.modal.soul.reminder.activity.CreateTaskActivity">
-            
         </activity>
         <activity
             android:name="jp.modal.soul.reminder.activity.TaskListActivity" >
-            
+        </activity>
+        <activity
+            android:name="jp.modal.soul.reminder.activity.TaskDetailActivity" >
         </activity>
 	<receiver android:name="jp.modal.soul.reminder.receiver.AlarmReceiver" android:process=":remote" /> 
     </application>
