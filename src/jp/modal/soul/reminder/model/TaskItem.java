@@ -6,10 +6,7 @@ import java.io.Serializable;
 public class TaskItem implements Comparable<TaskItem>, Serializable {
 	/** ログ出力用 タグ */
     public final String TAG = this.getClass().getSimpleName();
-    
-    /** intent extra id */
-    public static final String TASK_ID = "task_id";
-    
+        
     /** status */
     public static final int STATUS_TODO = 0;
     public static final int STATUS_DONE = 1;

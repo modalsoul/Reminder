@@ -12,7 +12,7 @@
     android:cacheColorHint="#00000000"
     />
   <include
-    layout="@layout/footer"
+    layout="@layout/list_footer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     />

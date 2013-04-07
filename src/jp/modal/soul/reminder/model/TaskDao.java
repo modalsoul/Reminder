@@ -12,7 +12,7 @@ import android.util.Log;
 public class TaskDao extends Dao{
 	/** ログ出力用 タグ */
     public final String TAG = this.getClass().getSimpleName();
-    
+        
     public static final int MILLI = 1000;
 	
 	public static final String TABLE_NAME = "task";
@@ -102,16 +102,54 @@ public class TaskDao extends Dao{
 		return result;
 	}
 	
+    public int update(int id, TaskItem item) {
+        // WritableモードでDBオープン
+        SQLiteDatabase db = getWritableDatabase();
+
+        // 更新系処理の実行
+        int result = updateWithoutOpenDb(db, id, item);
+
+        // DBクローズ(必須)
+        db.close();
+        return result;
+    }
+    public int updateWithoutOpenDb(SQLiteDatabase db, int id, TaskItem item) {
+        // 更新系処理の実行
+        ContentValues values = getContentValues(item);
+
+        // 更新条件の設定
+        String whereClause = COLUMN_ID + "=?";
+        String[] whereArgs = { String.valueOf(id) };
+
+        // updateに成功するとupdateした更新件数
+        int result = db.update(TABLE_NAME, values, whereClause, whereArgs);
+        if (result <= Dao.RETURN_CODE_UPDATE_FAIL) {
+            
+        }
+        return result;
+    }
+    
+    public int updateStatusDone(TaskItem item) {
+    	item.status = TaskItem.STATUS_DONE;
+    	return update(item.id, item);
+    }
+	
 	ContentValues getContentValues(TaskItem item) {
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_MESSAGE, item.message);
 		values.put(COLUMN_DELAY, item.delay);
 		
-		long startDate = new Date().getTime();
-		values.put(COLUMN_START_DATE, startDate);
-		long targetDate = startDate + item.delay*MILLI;
-		values.put(COLUMN_TARGET_DATE, targetDate);
-		Log.e(TAG, "start is:" + startDate +", target is:" + targetDate);
+		if(item.start_date == null) {
+			long startDate = new Date().getTime();
+			item.start_date = String.valueOf(startDate);
+		}
+		values.put(COLUMN_START_DATE, item.start_date);
+		
+		if(item.target_date == null) {
+			long targetDate = Long.valueOf(item.start_date) + item.delay*MILLI;
+			item.target_date = String.valueOf(targetDate);
+		}
+		values.put(COLUMN_TARGET_DATE, item.target_date);
 		values.put(COLUMN_STATUS, item.status);
 		
 		return values;

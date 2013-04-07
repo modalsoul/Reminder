@@ -1,14 +1,13 @@
 package jp.modal.soul.reminder.activity;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import jp.modal.soul.reminder.R;
 import jp.modal.soul.reminder.model.TaskItem;
 import jp.modal.soul.reminder.util.Const;
+import jp.modal.soul.reminder.util.Utils;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,8 @@ import android.widget.TextView;
 public class TaskListAdapter extends ArrayAdapter<TaskItem>  {
 	/** ログ出力用 タグ */
     public final String TAG = this.getClass().getSimpleName();
+    
+    boolean statusFlag;
 
 	static class ViewHolder {
 		TextView hiddenId;
@@ -42,35 +43,34 @@ public class TaskListAdapter extends ArrayAdapter<TaskItem>  {
     	if (convertView == null) {
     		convertView = inflater.inflate(layoutId, parent, false);
     		holder = new ViewHolder();
-    		holder.hiddenId = (TextView) convertView.findViewById(R.id.hidden_id);
-    		holder.messageView = (TextView) convertView.findViewById(R.id.message);
-    		holder.timestampView = (TextView) convertView.findViewById(R.id.timestamp);
-    		holder.statusView = (ImageView) convertView.findViewById(R.id.status_icon);
+    		getHolderView(convertView, holder);
     		convertView.setTag(holder);
     	} else {
     		holder = (ViewHolder) convertView.getTag();
     	}
     	TaskItem data = getItem(position);
-    	holder.hiddenId.setText(Integer.toString(data.id));
+    	setHolderView(holder, data);
+    	return convertView;
+    }
+
+	private void setHolderView(ViewHolder holder, TaskItem data) {
+		holder.hiddenId.setText(Integer.toString(data.id));
     	holder.messageView.setText(data.message);
-    	holder.timestampView.setText(getDateString(data.target_date) + Const.TASK_ALART_TIME_STRING);
-    	Date s = new Date(Long.valueOf(data.start_date));
-    	Date t = new Date(Long.valueOf(data.target_date));
+    	holder.timestampView.setText(Utils.getDateString(data.target_date) + Const.TASK_ALART_TIME_STRING);
 
     	if(data.status == TaskItem.STATUS_DONE) {
     		holder.statusView.setImageResource(R.drawable.tasks);
     	} else if(data.status == TaskItem.STATUS_TODO) {
     		holder.statusView.setImageResource(R.drawable.clock);
     	}
-    	return convertView;
-    }
-    
-    String getDateString(String targetDateMillis) {
+	}
 
-    	Date target = new Date(Long.valueOf(targetDateMillis));
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("M/d HH:mm");
-    	
-    	return dateFormat.format(target);
-    }
+	private void getHolderView(View convertView, ViewHolder holder) {
+		holder.hiddenId = (TextView) convertView.findViewById(R.id.hidden_id);
+		holder.messageView = (TextView) convertView.findViewById(R.id.message);
+		holder.timestampView = (TextView) convertView.findViewById(R.id.timestamp);
+		holder.statusView = (ImageView) convertView.findViewById(R.id.status_icon);
+	}
+
 }
 
