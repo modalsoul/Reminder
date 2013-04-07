@@ -1,6 +1,5 @@
 package jp.modal.soul.reminder.activity;
 
-import java.util.Date;
 import java.util.List;
 
 import jp.modal.soul.reminder.R;
@@ -11,16 +10,18 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class TaskListAdapter extends ArrayAdapter<TaskItem>  {
+public class TaskListAdapter extends BaseAdapter  {
 	/** ログ出力用 タグ */
     public final String TAG = this.getClass().getSimpleName();
     
     boolean statusFlag;
 
+    List<TaskItem> items;
+    
 	static class ViewHolder {
 		TextView hiddenId;
 		TextView messageView;
@@ -30,11 +31,14 @@ public class TaskListAdapter extends ArrayAdapter<TaskItem>  {
 
 	private LayoutInflater inflater;
     private int layoutId;
-    public TaskListAdapter(Context context, int layoutId, List<TaskItem>objects) {
-    	super(context, 0, objects);
+    public TaskListAdapter(Context context, int layoutId) {
     	this.inflater = (LayoutInflater) context
     		.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     	this.layoutId = layoutId;
+    }
+    
+    void setItems(List<TaskItem> items) {
+    	this.items = items;
     }
 
     @Override
@@ -48,7 +52,7 @@ public class TaskListAdapter extends ArrayAdapter<TaskItem>  {
     	} else {
     		holder = (ViewHolder) convertView.getTag();
     	}
-    	TaskItem data = getItem(position);
+    	TaskItem data = (TaskItem) getItem(position);
     	setHolderView(holder, data);
     	return convertView;
     }
@@ -70,6 +74,21 @@ public class TaskListAdapter extends ArrayAdapter<TaskItem>  {
 		holder.messageView = (TextView) convertView.findViewById(R.id.message);
 		holder.timestampView = (TextView) convertView.findViewById(R.id.timestamp);
 		holder.statusView = (ImageView) convertView.findViewById(R.id.status_icon);
+	}
+
+	@Override
+	public int getCount() {
+		return items == null? 0:items.size();
+	}
+
+	@Override
+	public Object getItem(int position) {
+		return items.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return 0;
 	}
 
 }

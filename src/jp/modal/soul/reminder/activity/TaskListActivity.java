@@ -71,7 +71,9 @@ public class TaskListActivity extends Activity {
 	}
 	private void setListView() {
 		items = dao.queryAllTask();
-		adapter = new TaskListAdapter(this, R.layout.list_item, items);
+		adapter = new TaskListAdapter(this, R.layout.list_item);
+		adapter.setItems(items);
+		adapter.notifyDataSetChanged();
 		listView.setAdapter(adapter);
 	}
 	private void getListView() {
