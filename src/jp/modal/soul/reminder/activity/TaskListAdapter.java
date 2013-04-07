@@ -1,5 +1,6 @@
 package jp.modal.soul.reminder.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jp.modal.soul.reminder.R;
@@ -18,7 +19,13 @@ public class TaskListAdapter extends BaseAdapter  {
 	/** ログ出力用 タグ */
     public final String TAG = this.getClass().getSimpleName();
     
-    boolean statusFlag;
+    // リスト表示のステータス
+    public static final int LIST_STATUS_ALL = 0;
+    public static final int LIST_STATUS_TODO = 1;
+    public static final int LIST_STATUS_DONE = 2;
+    
+    // リストの初期表示ステータス
+    int statusFlag = LIST_STATUS_ALL;
 
     List<TaskItem> items;
     
@@ -40,7 +47,19 @@ public class TaskListAdapter extends BaseAdapter  {
     void setItems(List<TaskItem> items) {
     	this.items = items;
     }
+    
+    void setTodoItems(List<TaskItem> items) {
+    	this.statusFlag = LIST_STATUS_TODO;
+    	
+    	setItems(items);
+    }
 
+    void setDoneItems(List<TaskItem> items) {
+    	this.statusFlag = LIST_STATUS_DONE;
+    	setItems(items);
+    }
+
+    
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
     	ViewHolder holder;

@@ -35,6 +35,7 @@ public class CreateTaskActivity extends Activity {
 	EditText messageView;
 	View setTimeButton;
 	Button createTaskButton;
+	Button cancelButton;
 	TimePickerDialog dialog;
 	TextView displayTime;
 	
@@ -61,19 +62,29 @@ public class CreateTaskActivity extends Activity {
 	}
 	
 	private void setupView() {
-		displayTime = (TextView)findViewById(R.id.display_time);
+		getView();
 		
-		messageView = (EditText)findViewById(R.id.message);
-		
-		setTimeButton = findViewById(R.id.select_time);
-		
-		setTimeButton.setOnClickListener(onSetTimeButtonClickListener);
-		
-		createTaskButton = (Button)findViewById(R.id.create_task);
-		
-		createTaskButton.setOnClickListener(onCreateTaskButtonClickListener);
+		setupEventHandling();
 
+		setupTimepicker();
+	}
+
+	private void setupTimepicker() {
 		dialog = new TimePickerDialog(this, android.R.style.Theme_Black, onTimeSetListener, 0, 10, true);
+	}
+
+	private void setupEventHandling() {
+		setTimeButton.setOnClickListener(onSetTimeButtonClickListener);
+		createTaskButton.setOnClickListener(onCreateTaskButtonClickListener);
+		cancelButton.setOnClickListener(onCancelButtonClickListener);
+	}
+
+	private void getView() {
+		displayTime = (TextView)findViewById(R.id.display_time);
+		messageView = (EditText)findViewById(R.id.message);
+		setTimeButton = findViewById(R.id.select_time);
+		createTaskButton = (Button)findViewById(R.id.create_task);
+		cancelButton = (Button)findViewById(R.id.cancel);
 	}
 	
 	OnClickListener onSetTimeButtonClickListener = new OnClickListener() {
@@ -126,7 +137,18 @@ public class CreateTaskActivity extends Activity {
 		
 	};
 	
+	View.OnClickListener onCancelButtonClickListener = new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			cancelCreateTask();
+		}
+	};
+	void cancelCreateTask() {
+		finish();
+	}
 
+	// TODO 外出し
 	void setupAlarm() {
 		Intent intent = new Intent(CreateTaskActivity.this, AlarmReceiver.class);  
 		intent.putExtra(TaskDetailActivity.EXTRA_KEY_TASK_ID, taskId);

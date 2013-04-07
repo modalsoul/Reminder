@@ -91,6 +91,21 @@ public class TaskDao extends Dao{
 		String orderBy = COLUMN_TARGET_DATE + " desc ";
 		return queryList(COLUMNS, null, null, null, null, orderBy, null);
 	}
+	public ArrayList<TaskItem> queryTaskByStatus(int status) {
+		String selection = COLUMN_STATUS + " = ?";
+		String[] selectionArgs = new String[1];
+		selectionArgs[0] = String.valueOf(status);
+		Log.e(TAG, selectionArgs[0]);
+		ArrayList<TaskItem> taskItems = queryList(COLUMNS, selection, selectionArgs, null, null, null, null);
+		
+		return taskItems;
+	}
+	public ArrayList<TaskItem> queryTodoTask() {
+		return queryTaskByStatus(TaskItem.STATUS_TODO);
+	}
+	public ArrayList<TaskItem> queryDoneTask() {
+		return queryTaskByStatus(TaskItem.STATUS_DONE);
+	}
 
 	public long insertWithoutOpenDb(SQLiteDatabase db, TaskItem item) throws Exception {
 		ContentValues values = getContentValues(item);		
