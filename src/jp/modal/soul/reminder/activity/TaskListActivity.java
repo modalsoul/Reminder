@@ -7,9 +7,12 @@ import jp.modal.soul.reminder.model.TaskDao;
 import jp.modal.soul.reminder.model.TaskItem;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -40,6 +43,7 @@ public class TaskListActivity extends Activity {
 	AlertDialog.Builder searchDialogBuilder;
 	EditText searchString;
 	
+	NotificationManager notificationManager;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -162,12 +166,10 @@ public class TaskListActivity extends Activity {
 	}
 	
 	void showTodoList() {
-		items = dao.queryTodoTask();
-		adapter.setTodoItems(items);
+		adapter.setTodoItems(this.items);
 	}
 	void showDoneList() {
-		items = dao.queryDoneTask();
-		adapter.setDoneItems(items);
+		adapter.setDoneItems(this.items);
 	}
 	
 	View.OnClickListener listSearchImageClickListener = new View.OnClickListener() {
@@ -183,20 +185,24 @@ public class TaskListActivity extends Activity {
 		searchDialogBuilder = new AlertDialog.Builder(TaskListActivity.this);
 		searchDialogBuilder.setTitle(R.string.search_dialog_titel);
 		searchDialogBuilder.setView(searchString);
-		searchDialogBuilder.setPositiveButton("検索", new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				
-				
-			}
-		});
+		searchDialogBuilder.setPositiveButton("検索", onSearchButtonClickListener);
 		searchDialogBuilder.setNegativeButton("キャンセル",null);
 		
 		searchDialogBuilder.show();
 	}
 	
-	
+	DialogInterface.OnClickListener onSearchButtonClickListener = new DialogInterface.OnClickListener() {
+		
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			String searchKey = searchString.getText().toString();
+			
+			// TODO 非同期処理化
+			items = dao.queryMessage(searchKey);
+			adapter.setItems(items);
+			adapter.notifyDataSetChanged();
+		}
+	};
 	
 	View.OnClickListener listAddImageClickListener = new View.OnClickListener() {
 		
@@ -206,5 +212,17 @@ public class TaskListActivity extends Activity {
 			startActivity(intent);
 		}
 	};
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		cancelAllNotification();
+		showAllList();
+	}
+	
+	void cancelAllNotification() {
+		notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.cancelAll();
+	}
 	
 }

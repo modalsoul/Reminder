@@ -8,4 +8,7 @@ public class Const {
 	/** タスク一覧画面 */
 	public static final String TASK_ALART_TIME_STRING = "にお知らせ予定";
 	
+	/** タスク詳細画面 */
+	public static final String TASK_DELETE_SUCCESS_MESSAGE = "削除しました";
+	
 }

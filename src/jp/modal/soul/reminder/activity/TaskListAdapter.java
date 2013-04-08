@@ -9,6 +9,7 @@ import jp.modal.soul.reminder.util.Const;
 import jp.modal.soul.reminder.util.Utils;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.LayoutInflater.Filter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -23,6 +24,7 @@ public class TaskListAdapter extends BaseAdapter  {
     public static final int LIST_STATUS_ALL = 0;
     public static final int LIST_STATUS_TODO = 1;
     public static final int LIST_STATUS_DONE = 2;
+    public static final int LIST_STATUS_SEARCH = 3;
     
     // リストの初期表示ステータス
     int statusFlag = LIST_STATUS_ALL;
@@ -48,17 +50,6 @@ public class TaskListAdapter extends BaseAdapter  {
     	this.items = items;
     }
     
-    void setTodoItems(List<TaskItem> items) {
-    	this.statusFlag = LIST_STATUS_TODO;
-    	
-    	setItems(items);
-    }
-
-    void setDoneItems(List<TaskItem> items) {
-    	this.statusFlag = LIST_STATUS_DONE;
-    	setItems(items);
-    }
-
     
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -109,6 +100,27 @@ public class TaskListAdapter extends BaseAdapter  {
 	public long getItemId(int position) {
 		return 0;
 	}
+	
+	
+	private List<TaskItem> getStatusTaskItems(int status, List<TaskItem> items) {
+		List<TaskItem> filteredItems = new ArrayList<TaskItem>();
+		for(TaskItem item: items) {
+			if(item.status == status) {
+				filteredItems.add(item);
+			}
+		}
+		return filteredItems;
+	}
 
+
+    void setTodoItems(List<TaskItem> items) {
+    	this.statusFlag = LIST_STATUS_TODO;
+    	setItems(getStatusTaskItems(TaskItem.STATUS_TODO, items));
+    }
+
+    void setDoneItems(List<TaskItem> items) {
+    	this.statusFlag = LIST_STATUS_DONE;
+    	setItems(getStatusTaskItems(TaskItem.STATUS_DONE, items));
+    }
 }
 

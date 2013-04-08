@@ -6,4 +6,7 @@
   <string name="notification_title">メモのお知らせ</string>
   
   <string name="search_dialog_titel">メモを検索</string>
+  
+  <string name="delete_confirm_dialog_ok">OK</string>
+  <string name="delete_confirm_dialog_cancel">Cancel</string>
 </resources>

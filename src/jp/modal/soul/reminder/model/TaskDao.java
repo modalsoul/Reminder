@@ -75,6 +75,11 @@ public class TaskDao extends Dao{
 		return itemList;
 	}
 	
+	/**
+	 * Get a TaskItem from id
+	 * @param id
+	 * @return TaskItem or null
+	 */
 	public TaskItem queryTaskByTaskId(int id) {
 		String selection = COLUMN_ID + " = ?";
 		String[] selectionArgs = new String[1];
@@ -87,26 +92,64 @@ public class TaskDao extends Dao{
 		return taskItems.get(0);
 	}
 	
+	/**
+	 * Get all TaskItem
+	 * @return ArrayList<TaskItem>
+	 */
 	public ArrayList<TaskItem> queryAllTask() {
 		String orderBy = COLUMN_TARGET_DATE + " desc ";
 		return queryList(COLUMNS, null, null, null, null, orderBy, null);
 	}
-	public ArrayList<TaskItem> queryTaskByStatus(int status) {
+	/**
+	 * Get all particular state TaskItem 
+	 * @param status
+	 * @return TaskItem
+	 */
+	private ArrayList<TaskItem> queryTaskByStatus(int status) {
 		String selection = COLUMN_STATUS + " = ?";
 		String[] selectionArgs = new String[1];
 		selectionArgs[0] = String.valueOf(status);
-		Log.e(TAG, selectionArgs[0]);
-		ArrayList<TaskItem> taskItems = queryList(COLUMNS, selection, selectionArgs, null, null, null, null);
+		String orderBy = COLUMN_TARGET_DATE + " desc ";
+		
+		ArrayList<TaskItem> taskItems = queryList(COLUMNS, selection, selectionArgs, null, null, orderBy, null);
 		
 		return taskItems;
 	}
+	/**
+	 * Get all TODO state TaskItem
+	 * @return TaskItem
+	 */
 	public ArrayList<TaskItem> queryTodoTask() {
 		return queryTaskByStatus(TaskItem.STATUS_TODO);
 	}
+	/**
+	 * Get all DONE state TaskItem
+	 * @return TaskItem
+	 */
 	public ArrayList<TaskItem> queryDoneTask() {
 		return queryTaskByStatus(TaskItem.STATUS_DONE);
 	}
 
+	public ArrayList<TaskItem> queryMessage(String message) {
+		String selection = COLUMN_MESSAGE + " like ?";
+		String[] selectionArgs = new String[1];
+		selectionArgs[0] = "%" + message + "%";
+		String orderBy = COLUMN_TARGET_DATE + " desc ";
+		ArrayList<TaskItem> taskItems = queryList(COLUMNS, selection, selectionArgs, null, null, orderBy, null);
+		
+		if(taskItems.size() != 1) {
+			return null;
+		}
+		return taskItems;
+	}
+	
+	/**
+	 * Insert TaskItem
+	 * @param db
+	 * @param item
+	 * @return result
+	 * @throws Exception
+	 */
 	public long insertWithoutOpenDb(SQLiteDatabase db, TaskItem item) throws Exception {
 		ContentValues values = getContentValues(item);		
 		
@@ -117,6 +160,12 @@ public class TaskDao extends Dao{
 		return result;
 	}
 	
+	/**
+	 * Update TaskItem
+	 * @param id
+	 * @param item
+	 * @return result
+	 */
     public int update(int id, TaskItem item) {
         // WritableモードでDBオープン
         SQLiteDatabase db = getWritableDatabase();
@@ -128,7 +177,8 @@ public class TaskDao extends Dao{
         db.close();
         return result;
     }
-    public int updateWithoutOpenDb(SQLiteDatabase db, int id, TaskItem item) {
+    
+    private int updateWithoutOpenDb(SQLiteDatabase db, int id, TaskItem item) {
         // 更新系処理の実行
         ContentValues values = getContentValues(item);
 
@@ -143,12 +193,21 @@ public class TaskDao extends Dao{
         }
         return result;
     }
-    
+    /**
+     * Update TaskItem status DONE
+     * @param item
+     * @return result
+     */
     public int updateStatusDone(TaskItem item) {
     	item.status = TaskItem.STATUS_DONE;
     	return update(item.id, item);
     }
 	
+    /**
+     * Make ContentValues from TaskItem
+     * @param item
+     * @return ContentValues
+     */
 	ContentValues getContentValues(TaskItem item) {
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_MESSAGE, item.message);
@@ -168,5 +227,18 @@ public class TaskDao extends Dao{
 		values.put(COLUMN_STATUS, item.status);
 		
 		return values;
+	}
+	
+	public int delete(int id) {
+		SQLiteDatabase db = getWritableDatabase();
+		int result =  deleteWithoutOpenDb(db, id);
+		db.close();
+		return result;
+	}
+	
+	private int deleteWithoutOpenDb(SQLiteDatabase db, int id) {
+		String whereClause = COLUMN_ID + "=?";
+		String[] whereArgs = { String.valueOf(id) };
+		return db.delete(TABLE_NAME, whereClause, whereArgs);
 	}
 }
