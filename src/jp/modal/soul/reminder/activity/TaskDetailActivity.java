@@ -1,5 +1,9 @@
 package jp.modal.soul.reminder.activity;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
 import jp.modal.soul.reminder.R;
 import jp.modal.soul.reminder.model.TaskDao;
 import jp.modal.soul.reminder.model.TaskItem;
@@ -9,10 +13,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +40,7 @@ public class TaskDetailActivity extends Activity {
 	TextView message;
 	Button deleteTaskButton;
 	Button backButton;
+	ImageView imageView;
 	
 	AlertDialog.Builder deleteConfirmDialogBuilder;
 	
@@ -77,12 +85,34 @@ public class TaskDetailActivity extends Activity {
 		registeredTime.setText(Utils.getDateString(taskItem.start_date));		
 		alartTime.setText(Utils.getDateString(taskItem.target_date));
 		message.setText(taskItem.message);
+
+		if(taskItem.image_url != "") {
+			setImage();
+		}
+
+	}
+
+	private void setImage() {
+		Uri uri = Uri.parse(taskItem.image_url);
+		
+		InputStream in;
+		try {
+			in = getContentResolver().openInputStream(uri);
+			Bitmap img = BitmapFactory.decodeStream(in);
+			in.close();
+			imageView.setImageBitmap(img); 
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void getView() {
 		registeredTime = (TextView)findViewById(R.id.registered_time);
 		alartTime = (TextView)findViewById(R.id.alart_time);
 		message = (TextView)findViewById(R.id.message_string);
+		imageView = (ImageView)findViewById(R.id.image_detail);
 	}
 	
 	void setupEventHandling() {
