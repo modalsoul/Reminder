@@ -1,5 +1,6 @@
 package jp.modal.soul.reminder.activity;
 
+import java.io.InputStream;
 import java.util.Calendar;
 
 import jp.modal.soul.reminder.R;
@@ -15,12 +16,16 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -32,12 +37,16 @@ public class CreateTaskActivity extends Activity {
     public static final int ONE_MINUTE_SECONDS = 60;
     public static final int ONE_HOUR_MINUTES = 60;
     
+    private static final int REQUEST_GALLERY = 0;
+    
 	EditText messageView;
 	View setTimeButton;
 	Button createTaskButton;
 	Button cancelButton;
 	TimePickerDialog dialog;
 	TextView displayTime;
+	Button setImageButton;
+	ImageView image;
 	
 	TaskDao taskDao;
 	TaskItem item;
@@ -45,6 +54,8 @@ public class CreateTaskActivity extends Activity {
 	int hour = 0;
 	int minutes = 0;
 	int taskId;
+	
+	private boolean isSetImage = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +88,7 @@ public class CreateTaskActivity extends Activity {
 		setTimeButton.setOnClickListener(onSetTimeButtonClickListener);
 		createTaskButton.setOnClickListener(onCreateTaskButtonClickListener);
 		cancelButton.setOnClickListener(onCancelButtonClickListener);
+		setImageButton.setOnClickListener(onSetImageButtonClickListener);
 	}
 
 	private void getView() {
@@ -85,6 +97,8 @@ public class CreateTaskActivity extends Activity {
 		setTimeButton = findViewById(R.id.select_time);
 		createTaskButton = (Button)findViewById(R.id.create_task);
 		cancelButton = (Button)findViewById(R.id.cancel);
+		setImageButton = (Button)findViewById(R.id.set_image_button);
+		image = (ImageView)findViewById(R.id.image_view);
 	}
 	
 	OnClickListener onSetTimeButtonClickListener = new OnClickListener() {
@@ -147,6 +161,25 @@ public class CreateTaskActivity extends Activity {
 	void cancelCreateTask() {
 		finish();
 	}
+	
+	View.OnClickListener onSetImageButtonClickListener = new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View arg0) {
+			setImageButtonAction();
+		}
+	};
+	 void setImageButtonAction() {
+		 if(isSetImage) {
+			image.setImageBitmap(null);
+			isSetImage = false;
+		 } else {
+			Intent intent = new Intent();
+			intent.setType("image/*");
+			intent.setAction(Intent.ACTION_GET_CONTENT);
+			startActivityForResult(intent, REQUEST_GALLERY);
+		}
+	 }
 
 	// TODO 外出し
 	void setupAlarm() {
@@ -164,6 +197,23 @@ public class CreateTaskActivity extends Activity {
                   
         Toast.makeText(CreateTaskActivity.this, Const.CREATE_TASK_SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();  
     
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(requestCode == REQUEST_GALLERY && resultCode == RESULT_OK) {
+			try {
+				Uri uri = data.getData();
+				
+				InputStream in = getContentResolver().openInputStream(uri);
+				Bitmap img = BitmapFactory.decodeStream(in);
+				in.close();
+				image.setImageBitmap(img); 
+				isSetImage = true;
+			} catch (Exception e) {
+				
+			}
+		}
 	}
 
 }
