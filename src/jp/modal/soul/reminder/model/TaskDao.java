@@ -23,6 +23,7 @@ public class TaskDao extends Dao{
 	public static final String COLUMN_START_DATE = "start_date"; 
 	public static final String COLUMN_TARGET_DATE = "target_date";
 	public static final String COLUMN_STATUS = "status";
+	public static final String COLUMN_IMAGE_URL = "image_url";
 
 	public static final String[] COLUMNS = {
 		COLUMN_ID,
@@ -30,7 +31,8 @@ public class TaskDao extends Dao{
 		COLUMN_DELAY,
 		COLUMN_START_DATE,
 		COLUMN_TARGET_DATE,
-		COLUMN_STATUS
+		COLUMN_STATUS,
+		COLUMN_IMAGE_URL
 	};
 	
 	public static final String CREATE_TABLE;
@@ -39,7 +41,8 @@ public class TaskDao extends Dao{
 							+ COLUMN_MESSAGE + " text not null, "
 							+ COLUMN_START_DATE + " text not null, "
 							+ COLUMN_TARGET_DATE + " text not null, "
-							+ COLUMN_STATUS + " integer not null"
+							+ COLUMN_STATUS + " integer not null "
+							+ COLUMN_IMAGE_URL + " text "
 							;
 		CREATE_TABLE = createTable(TABLE_NAME, columnDefine);
 	}
@@ -56,6 +59,7 @@ public class TaskDao extends Dao{
 		taskItem.start_date = cursor.getString(3);
 		taskItem.target_date = cursor.getString(4);
 		taskItem.status = cursor.getInt(5);
+		taskItem.image_url = cursor.getString(6);
 		return taskItem;
 	}
 	
@@ -225,7 +229,7 @@ public class TaskDao extends Dao{
 		}
 		values.put(COLUMN_TARGET_DATE, item.target_date);
 		values.put(COLUMN_STATUS, item.status);
-		
+		values.put(COLUMN_IMAGE_URL, item.image_url);
 		return values;
 	}
 	

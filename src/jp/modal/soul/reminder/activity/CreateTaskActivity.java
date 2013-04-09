@@ -50,6 +50,7 @@ public class CreateTaskActivity extends Activity {
 	
 	TaskDao taskDao;
 	TaskItem item;
+	String imageUri = "";
 	
 	int hour = 0;
 	int minutes = 0;
@@ -117,6 +118,7 @@ public class CreateTaskActivity extends Activity {
 			item.message = messageView.getText().toString();
 			item.delay = (hour * ONE_HOUR_MINUTES + minutes) * ONE_MINUTE_SECONDS;
 			item.status = TaskItem.STATUS_TODO;
+			item.image_url = imageUri;
 			
 			SQLiteDatabase db = taskDao.getWritableDatabase();
 			try {
@@ -173,6 +175,7 @@ public class CreateTaskActivity extends Activity {
 		 if(isSetImage) {
 			image.setImageBitmap(null);
 			isSetImage = false;
+			imageUri = "";
 		 } else {
 			Intent intent = new Intent();
 			intent.setType("image/*");
@@ -210,6 +213,7 @@ public class CreateTaskActivity extends Activity {
 				in.close();
 				image.setImageBitmap(img); 
 				isSetImage = true;
+				imageUri = uri.toString();
 			} catch (Exception e) {
 				
 			}

@@ -18,6 +18,7 @@ public class TaskItem implements Comparable<TaskItem>, Serializable {
 	public String start_date;
 	public String target_date;
 	public int status;
+	public String image_url;
 	
 	private static final long serialVersionUID = 1L;
 	
