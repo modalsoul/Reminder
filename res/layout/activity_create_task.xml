@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:baselineAligned="false">
 
 	    <include layout="@layout/select_time"
 	            android:layout_width="0dp"
@@ -31,7 +32,8 @@
 	        android:layout_width="wrap_content"
 	        android:width="280dp"
 	        android:height="120dp"
-	        android:gravity="top"/>
+	        android:gravity="top"
+	        android:inputType="textMultiLine"/>
 	    <LinearLayout 
 	        android:orientation="horizontal"
 	        android:layout_width="match_parent"
@@ -42,14 +44,14 @@
 		        android:id="@+id/create_task"
 		        android:layout_height="wrap_content"
 		        android:layout_width="wrap_content"
-		        android:text="伝言メモを登録する"
+		        android:text="@string/register_new_memo_button"
 		        android:layout_gravity="center_vertical"/>
 
 		    <Button
 		        android:id="@+id/cancel"
-		        android:layout_width="wrap_content"
+		        android:layout_width="0dp"
 		        android:layout_height="wrap_content"
-		        android:text="キャンセル" 
+		        android:text="@string/register_memo_cancel_button" 
 		        android:layout_weight="1"/>
 
 		</LinearLayout>
@@ -57,7 +59,7 @@
 		    android:id="@+id/set_image_button"
 		    android:layout_height="wrap_content"
 		    android:layout_width="wrap_content"
-		    android:text="Image"/>
+		    android:text="@string/add_image_button"/>
 		<ImageView 
 		    android:id="@+id/image_view"
 		    android:layout_height="match_parent"

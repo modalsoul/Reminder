@@ -6,15 +6,7 @@
     android:padding="10dp"
     android:gravity="center_horizontal" >
 	
-    <LinearLayout 
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:gravity="center_vertical">
-        
 
-    </LinearLayout>
     <LinearLayout 
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -45,19 +37,18 @@
 		        android:id="@+id/delete_task"
 		        android:layout_height="wrap_content"
 		        android:layout_width="wrap_content"
-		        android:text="伝言メモを削除する"
+		        android:text="@string/delete_memo_button"
 		        android:layout_gravity="center_vertical"/>
 		    <Button
 		        android:id="@+id/back_to_list"
-		        android:layout_width="wrap_content"
+		        android:layout_width="0dp"
 		        android:layout_height="wrap_content"
-		        android:text="戻る" 
+		        android:text="@string/return_memo_list_button" 
 		        android:layout_weight="1"/>
 		</LinearLayout>
 	</LinearLayout>
 	<ImageView 
 	    android:id="@+id/image_detail"
 	    android:layout_height="match_parent"
-	    android:layout_width="match_parent"
-	    android:contentDescription="Photo"/>
+	    android:layout_width="match_parent"/>
 </LinearLayout>

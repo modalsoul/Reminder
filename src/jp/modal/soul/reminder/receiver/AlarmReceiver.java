@@ -13,8 +13,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.util.Log;
 
 public class AlarmReceiver extends BroadcastReceiver {  
+	/** ログ出力用 タグ */
+    public final String TAG = this.getClass().getSimpleName();
 	  
 	Context context;
 	TaskDao dao;
@@ -36,10 +39,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     	setupDao(context);
     	
     	getTaskItem();
-    	
-    	updateTaskStatus();
-    	
+    	    	
     	if(item != null) {
+    		updateTaskStatus();
     		executeNotification();
     	}
     	
@@ -47,6 +49,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 	private void getTaskItem() {
 		item = dao.queryTaskByTaskId(taskId);
+		Log.e(TAG, "receive:"+ taskId);
 	}
 
 	private void setupDao(Context context) {

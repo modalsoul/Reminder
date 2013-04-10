@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,6 +62,7 @@ public class CreateTaskActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.activity_create_task);
 		
 		setupView();
@@ -124,6 +126,8 @@ public class CreateTaskActivity extends Activity {
 			try {
 				taskId = (int)taskDao.insertWithoutOpenDb(db, item);
 				if(taskId != -1) {
+					
+					Log.e(TAG,"insert:" + taskId);
 					setupAlarm();
 				} else {
 					throw(new Exception());
@@ -188,7 +192,7 @@ public class CreateTaskActivity extends Activity {
 	void setupAlarm() {
 		Intent intent = new Intent(CreateTaskActivity.this, AlarmReceiver.class);  
 		intent.putExtra(TaskDetailActivity.EXTRA_KEY_TASK_ID, taskId);
-        PendingIntent sender = PendingIntent.getBroadcast(CreateTaskActivity.this, 0, intent, 0);  
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(CreateTaskActivity.this, 0, intent, 0);  
   
         Calendar calendar = Calendar.getInstance();  
         calendar.setTimeInMillis(System.currentTimeMillis());  
@@ -196,7 +200,7 @@ public class CreateTaskActivity extends Activity {
           
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);  
         // one shot  
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);  
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);  
                   
         Toast.makeText(CreateTaskActivity.this, Const.CREATE_TASK_SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();  
     

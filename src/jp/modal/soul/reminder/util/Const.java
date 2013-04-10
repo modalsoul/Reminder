@@ -9,6 +9,10 @@ public class Const {
 	public static final String TASK_ALART_TIME_STRING = "にお知らせ予定";
 	
 	/** タスク詳細画面 */
+	/* 確認ダイアログ */
+	public static final String TASK_DELETE_DIALOG_TITLE = "メモの削除";
+	public static final String TASK_DELETE_DIALOG_MESSAGE = "削除しますか？";
+	/* トースト */
 	public static final String TASK_DELETE_SUCCESS_MESSAGE = "削除しました";
 	
 }

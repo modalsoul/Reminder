@@ -7,10 +7,13 @@ import java.io.InputStream;
 import jp.modal.soul.reminder.R;
 import jp.modal.soul.reminder.model.TaskDao;
 import jp.modal.soul.reminder.model.TaskItem;
+import jp.modal.soul.reminder.receiver.AlarmReceiver;
 import jp.modal.soul.reminder.util.Const;
 import jp.modal.soul.reminder.util.Utils;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,6 +21,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -47,6 +51,7 @@ public class TaskDetailActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.activity_task_detail);
 		
 		Intent intent = getIntent();
@@ -132,13 +137,13 @@ public class TaskDetailActivity extends Activity {
 	
 	void showDeleteTaskDialog() {
 		deleteConfirmDialogBuilder = new AlertDialog.Builder(this);
-		deleteConfirmDialogBuilder.setTitle("メモの削除");
-		deleteConfirmDialogBuilder.setMessage("削除しますか？");
-		deleteConfirmDialogBuilder.setPositiveButton(R.string.delete_confirm_dialog_ok, OnDeleteOkButtonClickListener);
+		deleteConfirmDialogBuilder.setTitle(Const.TASK_DELETE_DIALOG_TITLE);
+		deleteConfirmDialogBuilder.setMessage(Const.TASK_DELETE_DIALOG_MESSAGE);
+		deleteConfirmDialogBuilder.setPositiveButton(R.string.delete_confirm_dialog_ok, onDeleteOkButtonClickListener);
 		deleteConfirmDialogBuilder.setNegativeButton(R.string.delete_confirm_dialog_cancel, null);
 		deleteConfirmDialogBuilder.show();
 	}
-	DialogInterface.OnClickListener OnDeleteOkButtonClickListener = new DialogInterface.OnClickListener() {
+	DialogInterface.OnClickListener onDeleteOkButtonClickListener = new DialogInterface.OnClickListener() {
 
 		@Override
 		public void onClick(DialogInterface arg0, int arg1) {
@@ -154,6 +159,7 @@ public class TaskDetailActivity extends Activity {
 			backToList();
 		}
 	}
+
 	
 	View.OnClickListener OnBackToListButtonClickListener = new View.OnClickListener() {
 		
