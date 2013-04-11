@@ -13,6 +13,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.util.Log;
 
 public class AlarmReceiver extends BroadcastReceiver {  
@@ -57,7 +58,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 	}
 
 	private void getTaskId(Intent intent) {
-		taskId = Integer.valueOf(intent.getExtras().getSerializable(TaskDetailActivity.EXTRA_KEY_TASK_ID).toString());
+//		taskId = Integer.valueOf(intent.getExtras().getSerializable(TaskDetailActivity.EXTRA_KEY_TASK_ID).toString());
+		taskId = intent.getExtras().getInt(TaskDetailActivity.EXTRA_KEY_TASK_ID);
 	}
 
 	private void executeNotification() {
@@ -98,6 +100,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 	private void setupIntent() {
 		notifyIntent = new Intent(context, TaskListActivity.class);
 		notifyIntent.putExtra(TaskDetailActivity.EXTRA_KEY_TASK_ID, taskId);
+		Uri uri = Uri.parse("SCHEME://HOSTNAME/" + taskId);
+		notifyIntent.setData(uri);
 	}
 	
 	// TODO 更新失敗時にどうするか？

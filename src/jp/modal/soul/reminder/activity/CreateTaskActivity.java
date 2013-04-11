@@ -192,6 +192,8 @@ public class CreateTaskActivity extends Activity {
 	void setupAlarm() {
 		Intent intent = new Intent(CreateTaskActivity.this, AlarmReceiver.class);  
 		intent.putExtra(TaskDetailActivity.EXTRA_KEY_TASK_ID, taskId);
+		Uri uri = Uri.parse("SCHEME://HOSTNAME/" + taskId);
+		intent.setData(uri);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(CreateTaskActivity.this, 0, intent, 0);  
   
         Calendar calendar = Calendar.getInstance();  

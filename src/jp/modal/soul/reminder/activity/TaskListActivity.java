@@ -63,6 +63,7 @@ public class TaskListActivity extends Activity {
 		Bundle extra = getIntent().getExtras();
 		if(extra != null) {
 			taskId = extra.getInt(TaskDetailActivity.EXTRA_KEY_TASK_ID);
+			Log.e(TAG, "ID:" + taskId);
 			moveToDetail();
 		}
 	}
