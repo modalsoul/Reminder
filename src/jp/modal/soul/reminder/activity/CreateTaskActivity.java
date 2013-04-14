@@ -1,5 +1,6 @@
 package jp.modal.soul.reminder.activity;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 
@@ -22,8 +23,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,6 +40,10 @@ public class CreateTaskActivity extends Activity {
     public static final int ONE_HOUR_MINUTES = 60;
     
     private static final int REQUEST_GALLERY = 0;
+    private static final int IMAGE_HEIGHT = 640;
+    private static final int IMAGE_WIDTH = 480;
+    
+    
     
 	EditText messageView;
 	View setTimeButton;
@@ -210,20 +215,77 @@ public class CreateTaskActivity extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(requestCode == REQUEST_GALLERY && resultCode == RESULT_OK) {
+		
+		if(resultCode != RESULT_OK) {
+			return;
+		} else if(requestCode == REQUEST_GALLERY) {
 			try {
 				Uri uri = data.getData();
-				
-				InputStream in = getContentResolver().openInputStream(uri);
-				Bitmap img = BitmapFactory.decodeStream(in);
-				in.close();
-				image.setImageBitmap(img); 
-				isSetImage = true;
-				imageUri = uri.toString();
-			} catch (Exception e) {
-				
+				showImage(uri);
+			} catch (IOException e) {
+				showFailedGetImageToast();
 			}
 		}
 	}
+	
+	private void showFailedGetImageToast() {
+		Toast.makeText(CreateTaskActivity.this, Const.FAILED_GET_IMAGE_MESSAGE, Toast.LENGTH_SHORT).show(); 
+	}
 
+	private void showImage(Uri uri) throws IOException {
+
+		imageUri = uri.toString();
+		Bitmap img = createBitmap(uri);
+		image.setImageBitmap(img); 
+		isSetImage = true;
+	}
+	
+	private Bitmap createBitmap(Uri uri) throws IOException {
+		Bitmap bitmap = null;
+		InputStream is = null;
+		
+		try {
+			BitmapFactory.Options options = getBitmapOptions(uri);
+			
+			is = getContentResolver().openInputStream(uri);
+			bitmap = BitmapFactory.decodeStream(is, null, options);
+		} finally {
+			if(is != null) {
+				is.close();
+			}
+		}
+		return bitmap;
+	}
+	
+	private BitmapFactory.Options getBitmapOptions(Uri uri) throws IOException {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		
+		InputStream is = null;
+		
+		try {
+			// set attribute to get just image attribute
+			options.inJustDecodeBounds = true;
+			
+			is = getContentResolver().openInputStream(uri);
+			BitmapFactory.decodeStream(is, null, options);
+			
+			boolean landscape = options.outWidth > options.outHeight;
+			int height = landscape ? IMAGE_HEIGHT : IMAGE_WIDTH;
+			int width = landscape ? IMAGE_WIDTH : IMAGE_HEIGHT;
+			
+			int scale1 = (int)Math.floor(options.outWidth / width);
+			int scale2 = (int)Math.floor(options.outHeight / height);
+			
+			int scale = Math.max(scale1, scale2);
+			
+			options.inSampleSize = scale + (scale % 2);
+			options.inJustDecodeBounds = false;
+			
+		} finally {
+			if(is != null) {
+				is.close();
+			}
+		}
+		return options;
+	}
 }
