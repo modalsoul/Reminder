@@ -1,13 +1,13 @@
 package jp.modal.soul.reminder.activity;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Calendar;
 
 import jp.modal.soul.reminder.R;
 import jp.modal.soul.reminder.model.TaskDao;
 import jp.modal.soul.reminder.model.TaskItem;
 import jp.modal.soul.reminder.receiver.AlarmReceiver;
+import jp.modal.soul.reminder.task.GetImageTask;
 import jp.modal.soul.reminder.util.Const;
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -17,8 +17,6 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,9 +38,7 @@ public class CreateTaskActivity extends Activity {
     public static final int ONE_HOUR_MINUTES = 60;
     
     private static final int REQUEST_GALLERY = 0;
-    private static final int IMAGE_HEIGHT = 640;
-    private static final int IMAGE_WIDTH = 480;
-    
+  
     
     
 	EditText messageView;
@@ -235,57 +231,11 @@ public class CreateTaskActivity extends Activity {
 	private void showImage(Uri uri) throws IOException {
 
 		imageUri = uri.toString();
-		Bitmap img = createBitmap(uri);
-		image.setImageBitmap(img); 
+		GetImageTask task = new GetImageTask(this, image);
+		Uri uris[] = {uri};
+		task.execute(uris);
 		isSetImage = true;
 	}
 	
-	private Bitmap createBitmap(Uri uri) throws IOException {
-		Bitmap bitmap = null;
-		InputStream is = null;
-		
-		try {
-			BitmapFactory.Options options = getBitmapOptions(uri);
-			
-			is = getContentResolver().openInputStream(uri);
-			bitmap = BitmapFactory.decodeStream(is, null, options);
-		} finally {
-			if(is != null) {
-				is.close();
-			}
-		}
-		return bitmap;
-	}
-	
-	private BitmapFactory.Options getBitmapOptions(Uri uri) throws IOException {
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		
-		InputStream is = null;
-		
-		try {
-			// set attribute to get just image attribute
-			options.inJustDecodeBounds = true;
-			
-			is = getContentResolver().openInputStream(uri);
-			BitmapFactory.decodeStream(is, null, options);
-			
-			boolean landscape = options.outWidth > options.outHeight;
-			int height = landscape ? IMAGE_HEIGHT : IMAGE_WIDTH;
-			int width = landscape ? IMAGE_WIDTH : IMAGE_HEIGHT;
-			
-			int scale1 = (int)Math.floor(options.outWidth / width);
-			int scale2 = (int)Math.floor(options.outHeight / height);
-			
-			int scale = Math.max(scale1, scale2);
-			
-			options.inSampleSize = scale + (scale % 2);
-			options.inJustDecodeBounds = false;
-			
-		} finally {
-			if(is != null) {
-				is.close();
-			}
-		}
-		return options;
-	}
+
 }

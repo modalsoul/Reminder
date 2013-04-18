@@ -1,23 +1,15 @@
 package jp.modal.soul.reminder.activity;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-
 import jp.modal.soul.reminder.R;
 import jp.modal.soul.reminder.model.TaskDao;
 import jp.modal.soul.reminder.model.TaskItem;
-import jp.modal.soul.reminder.receiver.AlarmReceiver;
+import jp.modal.soul.reminder.task.GetImageTask;
 import jp.modal.soul.reminder.util.Const;
 import jp.modal.soul.reminder.util.Utils;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -99,18 +91,10 @@ public class TaskDetailActivity extends Activity {
 
 	private void setImage() {
 		Uri uri = Uri.parse(taskItem.image_url);
-		
-		InputStream in;
-		try {
-			in = getContentResolver().openInputStream(uri);
-			Bitmap img = BitmapFactory.decodeStream(in);
-			in.close();
-			imageView.setImageBitmap(img); 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}catch (IOException e) {
-			e.printStackTrace();
-		}
+		GetImageTask task = new GetImageTask(this, imageView);
+		Uri[] uris = {uri};
+		task.execute(uris);
+
 	}
 
 	private void getView() {
