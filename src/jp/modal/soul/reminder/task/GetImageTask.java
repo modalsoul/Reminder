@@ -3,6 +3,7 @@ package jp.modal.soul.reminder.task;
 import java.io.IOException;
 
 import jp.modal.soul.reminder.util.ImageUtil;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -17,6 +18,7 @@ public class GetImageTask extends AsyncTask<Uri, Void, Bitmap>{
 	Context context;
 	ImageView imageView;
 	Boolean isImageAvailable;
+	ProgressDialog dialog;
 	
 	public GetImageTask(Context context, ImageView imageView) {
 		this.context = context;
@@ -24,6 +26,21 @@ public class GetImageTask extends AsyncTask<Uri, Void, Bitmap>{
 		this.imageView = imageView;
 	}
 
+	@Override
+	protected void onPreExecute() {
+		super.onPreExecute();
+		
+		showDialog();
+		
+	}
+
+	private void showDialog() {
+		dialog = new ProgressDialog(context);
+		dialog.setMessage("Now Loading...");
+		dialog.setCancelable(false);
+		dialog.show();
+	}
+	
 	@Override
 	protected Bitmap doInBackground(Uri... uris) {
 		
@@ -33,7 +50,7 @@ public class GetImageTask extends AsyncTask<Uri, Void, Bitmap>{
 			bitmap = imageUtil.createBitmap();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
 		return bitmap;
 	}
 	@Override
@@ -42,6 +59,12 @@ public class GetImageTask extends AsyncTask<Uri, Void, Bitmap>{
 			Log.e(TAG, "Get image failed.");
 		}
 		imageView.setImageBitmap(result);
+		dissmissDialog();
+	}
+
+	private void dissmissDialog() {
+		dialog.dismiss();
+		dialog = null;
 	}
 
 }
