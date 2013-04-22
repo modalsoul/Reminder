@@ -1,25 +1,19 @@
 package jp.modal.soul.reminder.activity;
 
 import java.io.IOException;
-import java.util.Calendar;
 
 import jp.modal.soul.reminder.R;
 import jp.modal.soul.reminder.model.TaskDao;
 import jp.modal.soul.reminder.model.TaskItem;
-import jp.modal.soul.reminder.receiver.AlarmReceiver;
+import jp.modal.soul.reminder.task.CreateMemoTask;
 import jp.modal.soul.reminder.task.GetImageTask;
 import jp.modal.soul.reminder.util.Const;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
-import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -85,6 +79,8 @@ public class CreateTaskActivity extends Activity {
 	}
 
 	private void setupTimepicker() {
+		// TODO change TimePickerDialog to NumberPickerDialog
+		// TODO increase maximum settable time.
 		dialog = new TimePickerDialog(this, android.R.style.Theme_Black, onTimeSetListener, 0, 10, true);
 	}
 
@@ -117,30 +113,27 @@ public class CreateTaskActivity extends Activity {
 		
 		@Override
 		public void onClick(View v) {
+			setupTaskItem();
+			
+			registerMemo(item);
+			
+			finish();
+		}
+
+		private void setupTaskItem() {
 			item = new TaskItem();
 			item.message = messageView.getText().toString();
 			item.delay = (hour * ONE_HOUR_MINUTES + minutes) * ONE_MINUTE_SECONDS;
 			item.status = TaskItem.STATUS_TODO;
 			item.image_url = imageUri;
-			
-			SQLiteDatabase db = taskDao.getWritableDatabase();
-			try {
-				taskId = (int)taskDao.insertWithoutOpenDb(db, item);
-				if(taskId != -1) {
-					
-					Log.e(TAG,"insert:" + taskId);
-					setupAlarm();
-				} else {
-					throw(new Exception());
-				}
-			} catch (Exception e) {
-				Log.e(TAG, "INSERT FAILED:" + e.getMessage());
-			} finally {
-				db.close();
-			}
-			finish();
 		}
+
 	};
+	void registerMemo(TaskItem item) {
+		CreateMemoTask createMemoTask = new CreateMemoTask(this, item);
+		
+		createMemoTask.execute();
+	}
 	
 	TimePickerDialog.OnTimeSetListener onTimeSetListener = new OnTimeSetListener(){
 
@@ -188,26 +181,6 @@ public class CreateTaskActivity extends Activity {
 			startActivityForResult(intent, REQUEST_GALLERY);
 		}
 	 }
-
-	// TODO 外出し
-	void setupAlarm() {
-		Intent intent = new Intent(CreateTaskActivity.this, AlarmReceiver.class);  
-		intent.putExtra(TaskDetailActivity.EXTRA_KEY_TASK_ID, taskId);
-		Uri uri = Uri.parse("SCHEME://HOSTNAME/" + taskId);
-		intent.setData(uri);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(CreateTaskActivity.this, 0, intent, 0);  
-  
-        Calendar calendar = Calendar.getInstance();  
-        calendar.setTimeInMillis(System.currentTimeMillis());  
-        calendar.add(Calendar.SECOND, item.delay);  
-          
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);  
-        // one shot  
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);  
-                  
-        Toast.makeText(CreateTaskActivity.this, Const.CREATE_TASK_SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();  
-    
-	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
