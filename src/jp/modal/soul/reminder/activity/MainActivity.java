@@ -3,6 +3,7 @@ package jp.modal.soul.reminder.activity;
 import java.io.IOException;
 
 import jp.modal.soul.reminder.R;
+import jp.modal.soul.reminder.configure.Settings;
 import jp.modal.soul.reminder.model.DatabaseHelper;
 import jp.modal.soul.reminder.util.InitState;
 import android.app.Activity;
@@ -20,6 +21,7 @@ public class MainActivity extends Activity {
     
 	View task;
 	View list;
+	View setting;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,15 @@ public class MainActivity extends Activity {
 			}
 		});
 		
+		setting = findViewById(R.id.settings_item);
+		setting.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 	
 	/**
@@ -76,6 +87,9 @@ public class MainActivity extends Activity {
 			dbHelper.close();
 			// 起動状態を変更
 			initState.setStatus(InitState.PREFERENCE_BOOTED);
+			
+			Settings settings = new Settings(this);
+			settings.initSettings();
 		}
 	}
 

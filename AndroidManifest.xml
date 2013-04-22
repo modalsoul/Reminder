@@ -28,6 +28,9 @@
         <activity
             android:name="jp.modal.soul.reminder.activity.TaskDetailActivity" >
         </activity>
+        <activity 
+            android:name="jp.modal.soul.reminder.activity.SettingActivity">
+        </activity>
 	<receiver android:name="jp.modal.soul.reminder.receiver.AlarmReceiver" android:process=":remote" /> 
     </application>
     <uses-permission android:name="android.permission.VIBRATE" />
