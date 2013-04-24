@@ -4,6 +4,8 @@ package jp.modal.soul.reminder.receiver;
 import jp.modal.soul.reminder.R;
 import jp.modal.soul.reminder.activity.TaskDetailActivity;
 import jp.modal.soul.reminder.activity.TaskListActivity;
+import jp.modal.soul.reminder.configure.SettingItem;
+import jp.modal.soul.reminder.configure.Settings;
 import jp.modal.soul.reminder.model.TaskDao;
 import jp.modal.soul.reminder.model.TaskItem;
 import android.app.Notification;
@@ -86,10 +88,15 @@ public class AlarmReceiver extends BroadcastReceiver {
 	}
 
 	private void setupNotificationAction() {
-		notification.flags = Notification.FLAG_AUTO_CANCEL;
-		notification.defaults |= Notification.DEFAULT_SOUND;
-    	notification.defaults |= Notification.DEFAULT_LIGHTS;
-    	notification.defaults |= Notification.DEFAULT_VIBRATE;
+		
+		Settings settings = new Settings(context);
+		SettingItem settingItem = settings.getAllSetting();
+		
+		if(settingItem.soundSetting == Settings.SETTING_ON) notification.defaults |= Notification.DEFAULT_SOUND;
+    	if(settingItem.lightSetting == Settings.SETTING_ON) notification.defaults |= Notification.DEFAULT_LIGHTS;
+    	if(settingItem.vibrationSetting == Settings.SETTING_ON) notification.defaults |= Notification.DEFAULT_VIBRATE;
+
+    	notification.flags = Notification.FLAG_AUTO_CANCEL;
 	}
 
 	private void setupPendingIntent() {
