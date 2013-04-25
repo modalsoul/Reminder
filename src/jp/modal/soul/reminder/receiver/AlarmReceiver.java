@@ -16,7 +16,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.util.Log;
 
 public class AlarmReceiver extends BroadcastReceiver {  
 	/** ログ出力用 タグ */
@@ -60,7 +59,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 	private void getTaskId(Intent intent) {
 		taskId = Integer.valueOf(intent.getExtras().getSerializable(TaskDetailActivity.EXTRA_KEY_TASK_ID).toString());
-//		taskId = intent.getExtras().getInt(TaskDetailActivity.EXTRA_KEY_TASK_ID);
 	}
 
 	private void executeNotification() {

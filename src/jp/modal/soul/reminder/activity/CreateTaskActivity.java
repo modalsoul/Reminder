@@ -33,8 +33,6 @@ public class CreateTaskActivity extends Activity {
     
     private static final int REQUEST_GALLERY = 0;
   
-    
-    
 	EditText messageView;
 	View setTimeButton;
 	Button createTaskButton;
