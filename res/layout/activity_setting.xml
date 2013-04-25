@@ -3,24 +3,33 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp" >
-	
+    android:padding="10dp"
+    android:layout_gravity="center_vertical" >
+	<TextView 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center_vertical"
+        android:text="お知らせ時の動作を設定"
+        android:textSize="20dp"/>
     <CheckedTextView 
         android:id="@+id/notification_sound"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:text="Sound"/>
     <CheckedTextView 
         android:id="@+id/notification_light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:text="Light"/>
     <CheckedTextView 
         android:id="@+id/notification_vibration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:text="Vibration"/>
     

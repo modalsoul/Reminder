@@ -43,9 +43,6 @@ public class SettingActivity extends Activity {
 	void setupCheckState() {
 		settings = new Settings(this);
 		SettingItem item = settings.getAllSetting();
-		Log.e(TAG, "SOUND:" + item.soundSetting);
-		Log.e(TAG, "LIGHT:" + item.lightSetting);
-		Log.e(TAG, "VIB:" + item.vibrationSetting);
 		
 		if(item.soundSetting == Settings.SETTING_ON) {
 			soundCheckedTextView.setChecked(ON);

@@ -43,14 +43,17 @@ public class CreateMemoTask extends AsyncTask<Void, Void, Boolean>{
 	private Boolean registerTaskItem(TaskItem... params) {
 		TaskDao dao = new TaskDao(context);
 		SQLiteDatabase db = dao.getWritableDatabase();
+		boolean result = DB_INSERT_FAILED;
 		try {
 			taskId = dao.insertWithoutOpenDb(db, params[0]);
+			result = DB_INSERT_SUCCESS;
 		} catch (Exception e) {
 			// TODO implement exception process
 			e.printStackTrace();
-			return DB_INSERT_FAILED;
+		} finally {
+			db.close();
 		}
-		return DB_INSERT_SUCCESS;
+		return result;
 	}
 	
 	@Override
