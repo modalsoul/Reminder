@@ -111,11 +111,21 @@ public class CreateTaskActivity extends Activity {
 		
 		@Override
 		public void onClick(View v) {
-			setupTaskItem();
 			
-			registerMemo(item);
+			String messageBody = messageView.getText().toString();
 			
-			finish();
+			if(messageBody.equals("")) {
+				Toast.makeText(CreateTaskActivity.this, Const.EMPTY_BODY_TOAST_MESSAGE, Toast.LENGTH_SHORT).show();
+			} else if(hour == 0 && minutes == 0) {
+				Toast.makeText(CreateTaskActivity.this, Const.TIME_NOT_SELECTED_TOAST_MESSAGE, Toast.LENGTH_SHORT).show();
+			} else {			
+			
+				setupTaskItem();
+			
+				registerMemo(item);
+			
+				finish();
+			}
 		}
 
 		private void setupTaskItem() {
@@ -140,11 +150,15 @@ public class CreateTaskActivity extends Activity {
 			hour = hourOfDay;
 			minutes = minute;
 			if(minute < 10) {
-				displayTime.setText(hourOfDay + ":0" + minute);
+				displayTime.setText(getDisplayTimeStringWithPostfix(hourOfDay + ":0" + minute));
 			} else {
-				displayTime.setText(hourOfDay + ":" + minute);
+				displayTime.setText(getDisplayTimeStringWithPostfix(hourOfDay + ":" + minute));
 			}
 			displayTime.setTextSize(20);
+		}
+		
+		String getDisplayTimeStringWithPostfix(String text) {
+			return text + Const.SELECTED_TIME_POST_FIX_STRING;
 		}
 		
 	};
@@ -172,6 +186,7 @@ public class CreateTaskActivity extends Activity {
 			image.setImageBitmap(null);
 			isSetImage = false;
 			imageUri = "";
+			setImageButton.setText(R.string.add_image_button);
 		 } else {
 			Intent intent = new Intent();
 			intent.setType("image/*");
@@ -189,6 +204,7 @@ public class CreateTaskActivity extends Activity {
 			try {
 				Uri uri = data.getData();
 				showImage(uri);
+				setImageButton.setText(R.string.delete_image_button);
 			} catch (IOException e) {
 				showFailedGetImageToast();
 			}

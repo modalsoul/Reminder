@@ -5,6 +5,9 @@ public class Const {
 	/** タスク新規登録画面 */
 	public static final String CREATE_TASK_SUCCESS_MESSAGE = "登録が完了しました";
 	public static final String FAILED_GET_IMAGE_MESSAGE = "画像の取得に失敗しました";
+	public static final String SELECTED_TIME_POST_FIX_STRING = " 後にお知らせ";
+	public static final String EMPTY_BODY_TOAST_MESSAGE = "本文を入力してください";
+	public static final String TIME_NOT_SELECTED_TOAST_MESSAGE = "お知らせする時間を設定してください";
 	/** タスク一覧画面 */
 	public static final String TASK_ALART_TIME_STRING = "にお知らせ予定";
 	

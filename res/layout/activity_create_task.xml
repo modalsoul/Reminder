@@ -5,7 +5,32 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:gravity="center_horizontal" >
-	
+
+	<LinearLayout
+		android:orientation="horizontal"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="0dp"
+	    android:gravity="center_vertical">
+		<Button 
+		    android:id="@+id/create_task"
+		    android:layout_height="wrap_content"
+		    android:layout_width="wrap_content"
+		    android:text="@string/register_new_memo_button"
+		    android:layout_gravity="center_vertical"/>
+		<Button
+			android:id="@+id/cancel"
+		    android:layout_width="0dp"
+		    android:layout_height="wrap_content"
+		    android:text="@string/register_memo_cancel_button" 
+		    android:layout_weight="1"/>
+		<Button
+		    android:id="@+id/set_image_button"
+		    android:layout_height="wrap_content"
+		    android:layout_width="wrap_content"
+		    android:text="@string/add_image_button"/>
+	</LinearLayout>
+			
     <LinearLayout 
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -31,35 +56,11 @@
 	        android:layout_height="wrap_content"
 	        android:layout_width="wrap_content"
 	        android:width="280dp"
-	        android:height="120dp"
+	        android:height="80dp"
 	        android:gravity="top"
 	        android:inputType="textMultiLine"/>
-	    <LinearLayout 
-	        android:orientation="horizontal"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:padding="0dp"
-	        android:gravity="center_vertical">
-		    <Button 
-		        android:id="@+id/create_task"
-		        android:layout_height="wrap_content"
-		        android:layout_width="wrap_content"
-		        android:text="@string/register_new_memo_button"
-		        android:layout_gravity="center_vertical"/>
 
-		    <Button
-		        android:id="@+id/cancel"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:text="@string/register_memo_cancel_button" 
-		        android:layout_weight="1"/>
 
-		</LinearLayout>
-		<Button
-		    android:id="@+id/set_image_button"
-		    android:layout_height="wrap_content"
-		    android:layout_width="wrap_content"
-		    android:text="@string/add_image_button"/>
 		<ImageView 
 		    android:id="@+id/image_view"
 		    android:layout_height="match_parent"

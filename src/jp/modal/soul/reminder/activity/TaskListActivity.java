@@ -184,7 +184,7 @@ public class TaskListActivity extends Activity {
 	void showSearchList() {
 		searchString = new EditText(this);
 		searchDialogBuilder = new AlertDialog.Builder(TaskListActivity.this);
-		searchDialogBuilder.setTitle(R.string.search_dialog_titel);
+		searchDialogBuilder.setTitle(R.string.search_dialog_title);
 		searchDialogBuilder.setView(searchString);
 		searchDialogBuilder.setPositiveButton("検索", onSearchButtonClickListener);
 		searchDialogBuilder.setNegativeButton("キャンセル",null);

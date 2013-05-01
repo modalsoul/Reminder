@@ -9,17 +9,24 @@
   <!-- メモ登録画面 -->
   <string name="register_new_memo_button">メモを登録する</string>
   <string name="register_memo_cancel_button">キャンセル</string>
-  <string name="add_image_button">画像を添付する</string>
+  <string name="add_image_button">画像を添付</string>
+  <string name="delete_image_button">画像を消去</string>
   
   <!-- メモ一覧画面  -->
-  <string name="search_dialog_titel">メモを検索</string>
+  <string name="search_dialog_title">メモを検索</string>
   
   <!-- メモ詳細画面  -->
   <string name="delete_confirm_dialog_ok">OK</string>
   <string name="delete_confirm_dialog_cancel">Cancel</string>
   <string name="delete_memo_button">メモを削除する</string>
   <string name="return_memo_list_button">戻る</string>
-
+  
+  <!-- アプリ設定画面 -->
+  <string name="setting_display_title">お知らせ時の動作を設定</string>
+  <string name="setting_sound">通知音</string>
+  <string name="setting_light">ライト</string>
+  <string name="setting_vibration">バイブレーション</string>
+  
   <!-- 通知領域 -->
   <string name="notification_title">メモのお知らせ</string>
   

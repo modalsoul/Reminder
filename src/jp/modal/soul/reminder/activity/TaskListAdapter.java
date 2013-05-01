@@ -9,7 +9,6 @@ import jp.modal.soul.reminder.util.Const;
 import jp.modal.soul.reminder.util.Utils;
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.LayoutInflater.Filter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
