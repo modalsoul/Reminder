@@ -34,4 +34,5 @@
 	<receiver android:name="jp.modal.soul.reminder.receiver.AlarmReceiver" android:process=":remote" /> 
     </application>
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest>

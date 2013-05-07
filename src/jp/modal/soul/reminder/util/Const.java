@@ -8,6 +8,10 @@ public class Const {
 	public static final String SELECTED_TIME_POST_FIX_STRING = " 後にお知らせ";
 	public static final String EMPTY_BODY_TOAST_MESSAGE = "本文を入力してください";
 	public static final String TIME_NOT_SELECTED_TOAST_MESSAGE = "お知らせする時間を設定してください";
+	
+	public static final String TAKE_A_PICTURE = "写真を撮る";
+	public static final String PICK_UP_FROM_GALLERY = "ギャラリーから選択する";
+	public static final String[] IMAGE_PICK_ITEMS = {TAKE_A_PICTURE, PICK_UP_FROM_GALLERY};
 	/** タスク一覧画面 */
 	public static final String TASK_ALART_TIME_STRING = "にお知らせ予定";
 	

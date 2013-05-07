@@ -1,6 +1,9 @@
 package jp.modal.soul.reminder.activity;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import jp.modal.soul.reminder.R;
 import jp.modal.soul.reminder.model.TaskDao;
@@ -8,12 +11,18 @@ import jp.modal.soul.reminder.model.TaskItem;
 import jp.modal.soul.reminder.task.CreateMemoTask;
 import jp.modal.soul.reminder.task.GetImageTask;
 import jp.modal.soul.reminder.util.Const;
+import jp.modal.soul.reminder.util.Utils;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -32,7 +41,7 @@ public class CreateTaskActivity extends Activity {
     public static final int ONE_HOUR_MINUTES = 60;
     
     private static final int REQUEST_GALLERY = 0;
-  
+    private static final int REQUEST_CAMERA = 1;  
 	EditText messageView;
 	View setTimeButton;
 	Button createTaskButton;
@@ -45,12 +54,16 @@ public class CreateTaskActivity extends Activity {
 	TaskDao taskDao;
 	TaskItem item;
 	String imageUri = "";
+	Uri mImageUri;
 	
 	int hour = 0;
 	int minutes = 0;
 	int taskId;
 	
 	private boolean isSetImage = false;
+	
+	AlertDialog.Builder imagePickerDialogBuilder;
+	AlertDialog imagePickerDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -178,21 +191,60 @@ public class CreateTaskActivity extends Activity {
 		
 		@Override
 		public void onClick(View arg0) {
+			
 			setImageButtonAction();
 		}
 	};
-	 void setImageButtonAction() {
+	
+	void showImagePickerDialog() {
+		imagePickerDialogBuilder = new AlertDialog.Builder(CreateTaskActivity.this);
+		imagePickerDialogBuilder.setCancelable(true);
+		imagePickerDialogBuilder.setNegativeButton("Cancel", null);
+		imagePickerDialogBuilder.setItems(Const.IMAGE_PICK_ITEMS, onImagePickerDialogItemClickListener);
+		imagePickerDialog = imagePickerDialogBuilder.create();
+		imagePickerDialog.show();
+	}
+	
+	DialogInterface.OnClickListener onImagePickerDialogItemClickListener = new DialogInterface.OnClickListener() {
+		
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			imagePickerDialog.dismiss();
+			
+			if(which == 0) {
+				callCamera();
+			}else if(which == 1) {
+				callImageGallary();
+			}
+		}
+	};
+	
+	void callCamera() {
+		mImageUri = getPhotoUri();
+		Intent intent = new Intent();
+		intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+		intent.addCategory(Intent.CATEGORY_DEFAULT);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+		startActivityForResult(intent, REQUEST_CAMERA);
+	}
+	
+	void setImageButtonAction() {
 		 if(isSetImage) {
 			image.setImageBitmap(null);
 			isSetImage = false;
 			imageUri = "";
 			setImageButton.setText(R.string.add_image_button);
 		 } else {
-			Intent intent = new Intent();
-			intent.setType("image/*");
-			intent.setAction(Intent.ACTION_GET_CONTENT);
-			startActivityForResult(intent, REQUEST_GALLERY);
+			showImagePickerDialog();
+				
 		}
+	 }
+	 
+	 void callImageGallary() {
+		 Intent intent = new Intent();
+		 intent.setType("image/*");
+		 intent.setAction(Intent.ACTION_GET_CONTENT);
+		 startActivityForResult(intent, REQUEST_GALLERY);		 
 	 }
 	
 	@Override
@@ -208,6 +260,19 @@ public class CreateTaskActivity extends Activity {
 			} catch (IOException e) {
 				showFailedGetImageToast();
 			}
+		} else if(requestCode == REQUEST_CAMERA) {
+			Uri uri = data.getData();
+			if(uri != null) {
+				try {
+					showImage(uri);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				image.setImageURI(mImageUri);
+			}
+			setImageButton.setText(R.string.delete_image_button);
+			
 		}
 	}
 	
@@ -224,5 +289,26 @@ public class CreateTaskActivity extends Activity {
 		isSetImage = true;
 	}
 	
+	private Uri getPhotoUri() {
+        long currentTimeMillis = System.currentTimeMillis();
+        Date today = new Date(currentTimeMillis);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String title = dateFormat.format(today);
+        String dirPath = Utils.getDirPath(this);
+        String fileName = "samplecameraintent_" + title + ".jpg";
+        String path = dirPath + "/" + fileName;
+        File file = new File(path);
+        ContentValues values = new ContentValues();
+        values.put(Images.Media.TITLE, title);
+        values.put(Images.Media.DISPLAY_NAME, fileName);
+        values.put(Images.Media.MIME_TYPE, "image/jpeg");
+        values.put(Images.Media.DATA, path);
+        values.put(Images.Media.DATE_TAKEN, currentTimeMillis);
+        if (file.exists()) {
+            values.put(Images.Media.SIZE, file.length());
+        }
+        Uri uri = getContentResolver().insert(Images.Media.EXTERNAL_CONTENT_URI, values);
+        return uri;
+    }
 
 }
